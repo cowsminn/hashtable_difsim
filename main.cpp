@@ -104,52 +104,49 @@ struct hashtable_chaining {
     }
 };
 
-int main(){
+int main() {
     int n;
     cout << "Primul multiset" << endl;
     cout << "Numarul de perechi:";
-    cin>> n;
+    cin >> n;
     vector<intrare> multiset1;
-    for(int i = 1; i <= n; i++)
-    {
+    for (int i = 1; i <= n; i++) {
         cout << "Perechea " << i << endl;
-        int aparitie;
-        cin >> aparitie;
         char element;
         cin >> element;
-        intrare intrare;
-        intrare.aparitii = aparitie;
-        intrare.element = element;
-        multiset1.push_back(intrare);
+        int aparitie;
+        cin >> aparitie;
+        intrare intr;
+        intr.element = element;
+        intr.aparitii = aparitie;
+        multiset1.push_back(intr);
     }
+
     int m;
     cout << "Al doilea multiset" << endl;
     cout << "Numarul de perechi:";
     cin >> m;
     vector<intrare> multiset2;
-    for(int i = 1; i <= m; i++)
-    {
+    for (int i = 1; i <= m; i++) {
         cout << "Perechea " << i << endl;
-        int aparitie;
-        cin >> aparitie;
         char element;
         cin >> element;
-        intrare intrare;
-        intrare.aparitii = aparitie;
-        intrare.element = element;
-        multiset2.push_back(intrare);
+        int aparitie;
+        cin >> aparitie;
+        intrare intr;
+        intr.element = element;
+        intr.aparitii = aparitie;
+        multiset2.push_back(intr);
     }
-    int max = 0;
-    if(n > m)
-        max = n;
-    else
-        max = m;
-    hashtable_chaining H(max,hash_diviziune);
-    for(int i = 0; i < n; i++)
+
+    int max = (n > m) ? n : m;
+    hashtable_chaining H(max, hash_diviziune);
+    for (int i = 0; i < n; i++)
         H.put(multiset1[i].element, multiset1[i].aparitii);
-    for(int i = 0; i < m; i++)
+    for (int i = 0; i < m; i++)
         H.put(multiset2[i].element, multiset2[i].aparitii);
+
     H.afisare();
+
     return 0;
 }
-
