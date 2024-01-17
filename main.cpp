@@ -109,7 +109,8 @@ int main() {
     cout << "Primul multiset" << endl;
     cout << "Numarul de perechi:";
     cin >> n;
-    vector<intrare> multiset1(n, {'\0', 0});
+
+    vector<intrare> multiset1(n); // Initialize vector without default values
     for (int i = 0; i < n; i++) {
         cout << "Perechea " << i + 1 << endl;
         cin >> multiset1[i].element >> multiset1[i].aparitii;
@@ -119,7 +120,8 @@ int main() {
     cout << "Al doilea multiset" << endl;
     cout << "Numarul de perechi:";
     cin >> m;
-    vector<intrare> multiset2(m, {'\0', 0});
+
+    vector<intrare> multiset2(m); // Initialize vector without default values
     for (int i = 0; i < m; i++) {
         cout << "Perechea " << i + 1 << endl;
         cin >> multiset2[i].element >> multiset2[i].aparitii;
