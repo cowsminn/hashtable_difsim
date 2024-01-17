@@ -1,166 +1,125 @@
 #include <iostream>
+#include <cmath>
+#include <vector>
+using namespace std;
 
-#define k 20
-
-struct subvector {
-    int v[k] = {0};
-    subvector* next = nullptr;
+struct intrare{
+    char element;
+    int aparitii;
 };
 
-struct dynvector {
+struct nod{
+    intrare info;
+    nod* next;
+};
 
-    subvector* primul = nullptr;
-
-    void update(int poz, int x) {
-        int nrnod = poz / k;
-        int pozvector = poz % k;
-
-        if (nrnod >= 7) {
-            std::cerr << "noduri setate - 7" << std::endl;
-            exit(1);
-        }
-
-        subvector* current = primul;
-        subvector* prev = nullptr;
-
-        for (int i = 0; i < nrnod; i++) {
-            if (current == nullptr) {
-                current = new subvector();
-                if (prev != nullptr) {
-                    prev->next = current;
-                } else {
-                    primul = current;
-                }
-                current->next = nullptr;
-            }
-            prev = current;
-            current = current->next;
-        }
-
-        /// in caz ca poz < 20 => nrnod = 0 => nu intra pe for
-
-        if (current == nullptr) {
-            current = new subvector();
-            if (prev != nullptr) {
-                prev->next = current;
-            } else {
-                primul = current;
-            }
-            current->next = nullptr;
-        }
-        current->v[pozvector] = x;
+struct lista{
+    nod* primul_element;
+    lista(){
+        primul_element=NULL;
     }
-
-    int get(int poz) {
-        int nrnod = poz / k;
-        int pozvector = poz % k;
-
-        if (nrnod >= 7) {
-            std::cerr << "noduri setate - 7" << std::endl;
-            exit(1);
-        }
-
-        subvector* current = primul;
-
-        for (int i = 0; i < nrnod; i++) {
-            if (current == nullptr) {
-                return 0;
-            }
-            current = current->next;
-        }
-
-        if (current == nullptr) {
-            return 0;
-        }
-
-        return current->v[pozvector];
+    void insert_la_inceput(long long cheie, int valoare){
+        nod* nou = new nod;
+        nou->info.element = cheie;
+        nou->info.aparitii = valoare;
+        nou->next = primul_element;
+        primul_element = nou;
     }
-
-    dynvector operator+(const dynvector& other) const {
-        dynvector rez;
-
-        subvector* currentv = primul;
-        subvector* currentother = other.primul;
-
-        while (currentv != nullptr || currentother != nullptr) {
-            subvector suma;
-
-            if (currentv != nullptr) {
-                for (int j = 0; j < k; j++) {
-                    suma.v[j] += currentv->v[j];
-                }
-                currentv = currentv->next;
-            }
-
-            if (currentother != nullptr) {
-                for (int j = 0; j < k; j++) {
-                    suma.v[j] += currentother->v[j];
-                }
-                currentother = currentother->next;
-            }
-
-            /*
-            if (rez.primul == nullptr) {
-                rez.primul = new subvector(suma);
-            } else {
-                subvector* current = rez.primul;
-                while (current->next != nullptr) {
-                    current = current->next;
-                }
-                current->next = new subvector(suma);
-            }
-            */
-
-            rez.lipirev(suma);
-        }
-
-        return rez;
+    intrare* cauta_dupa_cheie(long long cheie){
+        nod* curent = primul_element;
+        while (curent!=NULL && curent->info.element!= cheie)
+            curent=curent->next;
+        if (curent==NULL)
+            return NULL;
+        return &(curent->info);
     }
-
-
-    void lipirev(const subvector& v) {
-        subvector* nodnou = new subvector(v);
-        nodnou->next = nullptr;
-
-        if (primul == nullptr) {
-            primul = nodnou;
-        } else {
-            subvector* current = primul;
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            current->next = nodnou;
-        }
-    }
-
-    ~dynvector() {
-        subvector* current = primul;
-        while (current != nullptr) {
-            subvector* next = current->next;
-            delete current;
-            current = next;
-        }
+    void afisare(){
+        nod* pointer;
+        if (primul_element==NULL)
+            cout<<"prim=NULL";
+        else
+            for (pointer = primul_element; pointer !=NULL;pointer = pointer->next)
+                cout<<"["<<pointer->info.element<<", "<<pointer->info.aparitii<< "] -> ";
+        cout<<endl;
     }
 };
 
-int main() {
-    dynvector v1, v2;
+int hash_diviziune(long long cheie){
+    return cheie % 19;
+}
 
-    v1.update(90, 15);
-    v2.update(24, 10);
-    v2.update(90,2);
-
-    ///std::cout << v1.get(200); - er
-    ///v1.update(200,200); - er
-
-    dynvector suma = v1 + v2;
-
-    for (int i = 0; i < 140; i++) {
-        std::cout << suma.get(i) << " ";
-        if ((i + 1) % 20 == 0) {
-            std::cout << std::endl;
-        }
+struct hashtable_chaining{
+    lista* T;
+    int n;
+    int (*hashfunc)(long long);
+    hashtable_chaining(int N, int (*H)(long long)){
+        n=N;
+        hashfunc = H;
+        T=new lista[n];
+    }
+    void put(long long cheie, int valoare){
+        int hash = hashfunc(cheie);
+        int index = hash % n;
+        intrare* gasit = T[index].cauta_dupa_cheie(cheie);
+        if (gasit==NULL)
+            T[index].insert_la_inceput(cheie,valoare);
+        else
+            gasit->aparitii= abs(gasit->aparitii- valoare);
     }
 
+
+    void afisare(){
+        for (int i=0;i<n;i++)
+            T[i].afisare();
+    }
+};
+
+int main(){
+    int n;
+    cout << "Primul multiset" << endl;
+    cout << "Numarul de perechi:";
+    cin>> n;
+    vector<intrare> multiset1;
+    for(int i = 1; i <= n; i++)
+    {
+        cout << "Perechea " << i << endl;
+        int aparitie;
+        cin >> aparitie;
+        char element;
+        cin >> element;
+        intrare intrare;
+        intrare.aparitii = aparitie;
+        intrare.element = element;
+        multiset1.push_back(intrare);
+    }
+    int m;
+    cout << "Al doilea multiset" << endl;
+    cout << "Numarul de perechi:";
+    cin >> m;
+    vector<intrare> multiset2;
+    for(int i = 1; i <= m; i++)
+    {
+        cout << "Perechea " << i << endl;
+        int aparitie;
+        cin >> aparitie;
+        char element;
+        cin >> element;
+        intrare intrare;
+        intrare.aparitii = aparitie;
+        intrare.element = element;
+        multiset2.push_back(intrare);
+    }
+    int max = 0;
+    if(n > m)
+        max = n;
+    else
+        max = m;
+    hashtable_chaining H(max,hash_diviziune);
+    for(int i = 0; i < n; i++)
+        H.put(multiset1[i].element, multiset1[i].aparitii);
+    for(int i = 0; i < m; i++)
+        H.put(multiset2[i].element, multiset2[i].aparitii);
+    H.afisare();
     return 0;
 }
+
