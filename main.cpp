@@ -110,10 +110,12 @@ int main() {
     cout << "Numarul de perechi:";
     cin >> n;
 
-    vector<intrare> multiset1(n); // Initialize vector without default values
+    vector<intrare> multiset1;  
     for (int i = 0; i < n; i++) {
         cout << "Perechea " << i + 1 << endl;
-        cin >> multiset1[i].element >> multiset1[i].aparitii;
+        intrare entry;
+        cin >> entry.element >> entry.aparitii;
+        multiset1.push_back(entry);
     }
 
     int m;
@@ -121,10 +123,12 @@ int main() {
     cout << "Numarul de perechi:";
     cin >> m;
 
-    vector<intrare> multiset2(m); // Initialize vector without default values
+    vector<intrare> multiset2;  
     for (int i = 0; i < m; i++) {
         cout << "Perechea " << i + 1 << endl;
-        cin >> multiset2[i].element >> multiset2[i].aparitii;
+        intrare intrare;
+        cin >> intrare.element >> intrare.aparitii;
+        multiset2.push_back(intrare);
     }
 
     int max = (n > m) ? n : m;
