@@ -1,5 +1,5 @@
 # Tema Unibuc Structuri de Date
 
-### Problema 6 Laborator 2
+### Problema 7 Laborator 4
 
-- (Vector dinamic) Implementati un vector dinamic ca fiind o lista de vectori mai mici de dimensiune fixata k (de exemplu k=20). Fiecare nod de lista contine un tablou de k intregi. Vrem sa avem operatie pentru updatat o pozitie v[123] = 15; Pentru k=20 se aloca 7 noduri si in al 7 lea nod pe pozitia a patra scriem 15. In rest in vectorii mici se gasesc zerouri daca nu am facut update. Implementati suma a doi astfel de vectori.
+- Folosind un tabel de dispersie pentru multisetul mai mare, implementati diferenta simetrica a doua multiseturi. Celalalt multiset este un array de perechi (element,aparitii), iar rezultatul este un array de perechi (element,aparitii), continand elementele din diferenta simetrica. O(n + m + coliziuni) 4a 2b 7c ∆ 2a 4b 3c = 2a 2b 4c -> (A\B)∪(B\A) 
