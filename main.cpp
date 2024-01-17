@@ -3,76 +3,87 @@
 #include <vector>
 using namespace std;
 
-struct intrare{
+struct intrare {
     char element;
     int aparitii;
 };
 
-struct nod{
+struct nod {
     intrare info;
     nod* next;
 };
 
-struct lista{
+struct lista {
     nod* primul_element;
-    lista(){
-        primul_element=NULL;
+    lista() {
+        primul_element = NULL;
     }
-    void insert_la_inceput(long long cheie, int valoare){
+    ~lista() {
+        nod* current = primul_element;
+        while (current != NULL) {
+            nod* next = current->next;
+            delete current;
+            current = next;
+        }
+    }
+    void insert_la_inceput(long long cheie, int valoare) {
         nod* nou = new nod;
         nou->info.element = cheie;
         nou->info.aparitii = valoare;
         nou->next = primul_element;
         primul_element = nou;
     }
-    intrare* cauta_dupa_cheie(long long cheie){
+    intrare* cauta_dupa_cheie(long long cheie) {
         nod* curent = primul_element;
-        while (curent!=NULL && curent->info.element!= cheie)
-            curent=curent->next;
-        if (curent==NULL)
+        while (curent != NULL && curent->info.element != cheie)
+            curent = curent->next;
+        if (curent == NULL)
             return NULL;
         return &(curent->info);
     }
-    void afisare(){
+    void afisare() {
         nod* pointer;
-        if (primul_element==NULL)
-            cout<<"prim=NULL";
+        if (primul_element == NULL)
+            cout << "prim=NULL";
         else
-            for (pointer = primul_element; pointer !=NULL;pointer = pointer->next)
-                cout<<"["<<pointer->info.element<<", "<<pointer->info.aparitii<< "] -> ";
-        cout<<endl;
+            for (pointer = primul_element; pointer != NULL; pointer = pointer->next)
+                cout << "[" << pointer->info.element << ", " << pointer->info.aparitii << "] -> ";
+        cout << endl;
     }
 };
 
-int hash_diviziune(long long cheie){
+int hash_diviziune(long long cheie) {
     return cheie % 19;
 }
 
-struct hashtable_chaining{
+struct hashtable_chaining {
     lista* T;
     int n;
     int (*hashfunc)(long long);
-    hashtable_chaining(int N, int (*H)(long long)){
-        n=N;
+    hashtable_chaining(int N, int (*H)(long long)) {
+        n = N;
         hashfunc = H;
-        T=new lista[n];
+        T = new lista[n];
     }
-    void put(long long cheie, int valoare){
+    ~hashtable_chaining() {
+        delete[] T;
+    }
+    void put(long long cheie, int valoare) {
         int hash = hashfunc(cheie);
         int index = hash % n;
         intrare* gasit = T[index].cauta_dupa_cheie(cheie);
-        if (gasit==NULL)
-            T[index].insert_la_inceput(cheie,valoare);
+        if (gasit == NULL)
+            T[index].insert_la_inceput(cheie, valoare);
         else
-            gasit->aparitii= abs(gasit->aparitii- valoare);
+            gasit->aparitii = abs(gasit->aparitii - valoare);
     }
 
-
-    void afisare(){
-        for (int i=0;i<n;i++)
+    void afisare() {
+        for (int i = 0; i < n; i++)
             T[i].afisare();
     }
 };
+
 
 int main(){
     int n;
