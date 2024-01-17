@@ -65,14 +65,14 @@ struct hashtable_chaining {
         hashfunc = H;
         T = new lista[n];
     }
-    // Copy constructor
+
     hashtable_chaining(const hashtable_chaining& other) : n(other.n), hashfunc(other.hashfunc) {
         T = new lista[n];
         for (int i = 0; i < n; ++i) {
             T[i] = other.T[i];
         }
     }
-    // Assignment operator
+
     hashtable_chaining& operator=(const hashtable_chaining& other) {
         if (this != &other) {
             delete[] T;
@@ -104,49 +104,37 @@ struct hashtable_chaining {
     }
 };
 
-int main(){
+int main() {
     int n;
     cout << "Primul multiset" << endl;
     cout << "Numarul de perechi:";
-    cin>> n;
-    vector<char> elemente1;
-    vector<int> aparitii1;
-    for(int i = 1; i <= n; i++)
-    {
-        cout << "Perechea " << i << endl;
-        int aparitie;
-        cin >> aparitie;
-        aparitii1.push_back(aparitie);
-        char element;
-        cin >> element;
-        elemente1.push_back(element);
+    cin >> n;
+
+    vector<intrare> multiset1(n); // Initialize vector without default values
+    for (int i = 0; i < n; i++) {
+        cout << "Perechea " << i + 1 << endl;
+        cin >> multiset1[i].element >> multiset1[i].aparitii;
     }
+
     int m;
     cout << "Al doilea multiset" << endl;
     cout << "Numarul de perechi:";
     cin >> m;
-    vector<char> elemente2;
-    vector<int> aparitii2;
-    for(int i = 1; i <= m; i++)
-    {
-        cout << "Perechea " << i << endl;
-        int aparitie;
-        cin >> aparitie;
-        aparitii2.push_back(aparitie);
-        char element;
-        cin >> element;
-        elemente2.push_back(element);
+
+    vector<intrare> multiset2(m); // Initialize vector without default values
+    for (int i = 0; i < m; i++) {
+        cout << "Perechea " << i + 1 << endl;
+        cin >> multiset2[i].element >> multiset2[i].aparitii;
     }
-    int max = 0;
-    if(n > m)
-        max = n;
-    else
-        max = m;
-    hashtable_chaining H(max,hash_diviziune);
-    for(int i = 0; i < n; i++)
-        H.put(elemente1[i], aparitii1[i]);
-    for(int i = 0; i < m; i++)
-        H.put(elemente2[i], aparitii2[i]);
+
+    int max = (n > m) ? n : m;
+    hashtable_chaining H(max, hash_diviziune);
+    for (int i = 0; i < n; i++)
+        H.put(multiset1[i].element, multiset1[i].aparitii);
+    for (int i = 0; i < m; i++)
+        H.put(multiset2[i].element, multiset2[i].aparitii);
+
     H.afisare();
+
     return 0;
 }
