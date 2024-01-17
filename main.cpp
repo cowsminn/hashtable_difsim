@@ -65,6 +65,26 @@ struct hashtable_chaining {
         hashfunc = H;
         T = new lista[n];
     }
+    // Copy constructor
+    hashtable_chaining(const hashtable_chaining& other) : n(other.n), hashfunc(other.hashfunc) {
+        T = new lista[n];
+        for (int i = 0; i < n; ++i) {
+            T[i] = other.T[i];
+        }
+    }
+    // Assignment operator
+    hashtable_chaining& operator=(const hashtable_chaining& other) {
+        if (this != &other) {
+            delete[] T;
+            n = other.n;
+            hashfunc = other.hashfunc;
+            T = new lista[n];
+            for (int i = 0; i < n; ++i) {
+                T[i] = other.T[i];
+            }
+        }
+        return *this;
+    }
     ~hashtable_chaining() {
         delete[] T;
     }
@@ -83,7 +103,6 @@ struct hashtable_chaining {
             T[i].afisare();
     }
 };
-
 
 int main(){
     int n;
